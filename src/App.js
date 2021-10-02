@@ -1,12 +1,13 @@
 import './App.css';
+import Visualizer from './components/Visualizer';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div>This is a test</div>
+        <div>Hello World</div>
       </header>
-      <div> Here is another</div>
+      <Visualizer/>
     </div>
   );
 }
