@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import {giniIndex} from '../mlAlgos/decisionTree.js';
 
 // dataset size
 const SAMPLE_SET_SIZE = 30
@@ -6,9 +7,11 @@ const SAMPLE_SET_SIZE = 30
 class Visualizer extends Component {
     constructor() {
         super()
+        // initialize array, place holder will be overwritten when component mounts
         this.state = {
-            arr: [],
+            arr: [[0,0,0]],
         };
+        this.resetArray = this.resetArray.bind(this);
     }
 
     componentDidMount() {
@@ -25,10 +28,10 @@ class Visualizer extends Component {
     }
 
     render() {
-        console.log(this.state.arr)
+        console.log(giniIndex([[[1,1], [1,0]], [[1,1], [1,0]]], [0,1]));
         return (
             <div>
-                <button onClick={() => this.resetArray()}>Generate Tree</button>
+                <button onClick={this.resetArray}>Generate Sample</button>
                 <button>ML1</button>
                 <button>ML2</button>
                 <button>ML3</button>
