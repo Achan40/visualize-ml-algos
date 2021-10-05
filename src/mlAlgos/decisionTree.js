@@ -29,6 +29,19 @@ export function giniIndex(groups, classes) {
     return gini;
 }
 
+function test_split(index, value, dataset) {
+    let left = [];
+    let right = [];
+    for (const row in dataset) {
+        if (row[index] < value) {
+            left.push(row);
+        } else {
+            right.push(row);
+        }
+    }
+    return left, right;
+}
+
 // helper function to sum up values in an array
 function addArr(arr) {
     return arr.reduce((a, b) => a + b,0);
