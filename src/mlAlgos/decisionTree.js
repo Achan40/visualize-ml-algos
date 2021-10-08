@@ -1,5 +1,5 @@
 // Calcuate gini index for a split dataset
-export function giniIndex(groups, classes) {
+function giniIndex(groups, classes) {
     // Count all samples at a split point
     let n_instances = groups.map(function (curr) {
         return curr.length;
@@ -29,17 +29,45 @@ export function giniIndex(groups, classes) {
     return gini;
 }
 
-function test_split(index, value, dataset) {
+// Split a dataset based on an attribute and an attribute value
+function testSplit(index, value, dataset) {
     let left = [];
     let right = [];
-    for (const row in dataset) {
-        if (row[index] < value) {
-            left.push(row);
+    for (let row = 0; row < dataset.length; row++) {
+        if (dataset[row][index] < value) {
+            left.push(parseFloat(dataset[row]));
+            
         } else {
-            right.push(row);
+            right.push(parseFloat(dataset[row]));
         }
     }
-    return left, right;
+    console.log([left,right])
+    return [left, right];
+}
+
+export function getSplit(dataset) {
+    let cv = dataset.map(function (row) {
+        return row[row.length-1];
+    })
+    let class_values = Array.from(new Set(cv));
+    let b_index = 999;
+    let b_value = 999;
+    let b_score = 999;
+    let b_groups = null;
+
+    for (let index = 0; index < dataset[0].length; index++) {
+        for (let row = 0; row < dataset.length; row++) {
+            let groups = testSplit(index, dataset[row][index], dataset);
+            let gini = giniIndex(groups, class_values);
+            if (gini < b_score) {
+                b_index = index;
+                b_value = dataset[row][index];
+                b_score = gini;
+                b_groups = groups;
+            }
+        } 
+    }
+    return {'index':b_index, 'value':b_value, 'groups':b_groups};
 }
 
 // helper function to sum up values in an array

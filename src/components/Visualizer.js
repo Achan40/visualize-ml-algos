@@ -1,8 +1,8 @@
 import React, {Component} from "react"
-import {giniIndex} from '../mlAlgos/decisionTree.js';
+import {getSplit} from '../mlAlgos/decisionTree.js';
 
 // dataset size
-const SAMPLE_SET_SIZE = 30
+const SAMPLE_SET_SIZE = 10
 
 class Visualizer extends Component {
     constructor() {
@@ -28,7 +28,8 @@ class Visualizer extends Component {
     }
 
     render() {
-        console.log(giniIndex([[[1,1], [1,0]], [[1,1], [1,0]]], [0,1]));
+        console.log(this.state.arr)
+        console.log(getSplit(this.state.arr));
         return (
             <div>
                 <button onClick={this.resetArray}>Generate Sample</button>
