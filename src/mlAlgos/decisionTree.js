@@ -35,13 +35,13 @@ function testSplit(index, value, dataset) {
     let right = [];
     for (let row = 0; row < dataset.length; row++) {
         if (dataset[row][index] < value) {
-            left.push(parseFloat(dataset[row]));
+            left.push(dataset[row]);
             
         } else {
-            right.push(parseFloat(dataset[row]));
+            right.push(dataset[row]);
         }
     }
-    console.log([left,right])
+    console.log(left,right)
     return [left, right];
 }
 
