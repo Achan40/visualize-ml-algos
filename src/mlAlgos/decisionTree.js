@@ -1,3 +1,17 @@
+// helper function to sum up values in an array
+function addArr(arr) {
+    return arr.reduce((a, b) => a + b,0);
+}
+
+// helper function to find the mode of an array
+function mode(arr){
+    let tmp = arr.slice()
+    return tmp.sort((a,b) =>
+          tmp.filter(v => v===a).length
+        - tmp.filter(v => v===b).length
+    ).pop();
+}
+
 // Calcuate gini index for a split dataset
 function giniIndex(groups, classes) {
     // Count all samples at a split point
@@ -17,6 +31,7 @@ function giniIndex(groups, classes) {
         let score = 0.0;
         // score the group based on the score for each class
         classes.forEach(class_val => {
+            // basically python list comprehension [row[-1] for row in group]
             let p = group.map(function (row) {
                 return row[group.length - 1];
             });
@@ -41,10 +56,10 @@ function testSplit(index, value, dataset) {
             right.push(dataset[row]);
         }
     }
-    console.log(left,right)
     return [left, right];
 }
 
+// Select the best split point for a dataset
 export function getSplit(dataset) {
     let cv = dataset.map(function (row) {
         return row[row.length-1];
@@ -55,10 +70,12 @@ export function getSplit(dataset) {
     let b_score = 999;
     let b_groups = null;
 
-    for (let index = 0; index < dataset[0].length; index++) {
+    for (let index = 0; index < dataset[0].length-1; index++) {
         for (let row = 0; row < dataset.length; row++) {
             let groups = testSplit(index, dataset[row][index], dataset);
             let gini = giniIndex(groups, class_values);
+            // logging the individual splits
+            // console.log('X%d < %.3f Gini=%.3f',index+1,dataset[row][index], gini);
             if (gini < b_score) {
                 b_index = index;
                 b_value = dataset[row][index];
@@ -67,10 +84,15 @@ export function getSplit(dataset) {
             }
         } 
     }
+    // logging the best split
+    // console.log('Split: [X%d < %.3f]', b_index+1, b_value);
     return {'index':b_index, 'value':b_value, 'groups':b_groups};
 }
 
-// helper function to sum up values in an array
-function addArr(arr) {
-    return arr.reduce((a, b) => a + b,0);
+// Create a terminal node, the most common class value for a group of rows
+export function toTerminal(group) {
+    let outcomes = group.map(function (row){
+        return row[row.length-1];
+    })
+    return mode(outcomes);
 }
