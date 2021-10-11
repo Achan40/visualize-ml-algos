@@ -3,7 +3,7 @@ function addArr(arr) {
     return arr.reduce((a, b) => a + b,0);
 }
 
-// helper function to find the mode of an array
+// helper function to find the mode of an array, if there is an equal mode, the last is selected
 function mode(arr){
     let tmp = arr.slice()
     return tmp.sort((a,b) =>
@@ -46,13 +46,12 @@ function giniIndex(groups, classes) {
 
 // Split a dataset based on an attribute and an attribute value
 function testSplit(index, value, dataset) {
-    let left = [];
-    let right = [];
+    const left = [], right = [];
     for (let row = 0; row < dataset.length; row++) {
         if (dataset[row][index] < value) {
             left.push(dataset[row]);
-            
-        } else {
+        }
+        else {
             right.push(dataset[row]);
         }
     }
@@ -96,3 +95,45 @@ export function toTerminal(group) {
     })
     return mode(outcomes);
 }
+
+// Create child splits for a node, or make a terminal
+function split(node, max_depth, min_size, depth) {
+    let left = node['groups'][0];
+    let right = node['groups'][1];
+    delete node['groups'];
+    // checking for a no split
+    if (!left || !left.length || !right || !right.length) {
+        node['left'] = node['right'] = toTerminal(left.concat(right));
+        return;
+    }
+    // check for max depth
+    if (depth >= max_depth) {
+        node['left'] = toTerminal(left);
+        node['right'] = toTerminal(right);
+        return;
+    }
+    // process left child
+    if (left.length <= min_size) {
+        node['left'] = toTerminal(left);
+    }
+    else {
+        node['left'] = getSplit(left);
+        split(node['left'], max_depth, min_size, depth+1);
+    }
+    // process right child
+    if (right.length <= min_size) {
+        node['right'] = toTerminal(right);
+    }
+    else {
+        node['right'] = getSplit(right);
+        split(node['right'], max_depth, min_size, depth+1);
+    }
+}
+
+// Building the decision tree
+export function buildTree(data, max_depth, min_size) {
+    let root = getSplit(data);
+    split(root, max_depth, min_size, 1);
+    return root;
+}
+
