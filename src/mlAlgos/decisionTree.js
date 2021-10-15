@@ -137,3 +137,15 @@ export function buildTree(data, max_depth, min_size) {
     return root;
 }
 
+// Print the tree
+export function printTree(node, depth=0) {
+    // check if node is a javascript object, (in python: isinstance(node,dict)), then in order traversal
+    if (typeof node === 'object' && node !== null) {
+        console.log('%s[X%d < %.3f]', ' '.repeat(depth), node['index']+1, node['value']);
+        printTree(node['left'], depth++);
+        printTree(node['right'], depth++);
+    }
+    else {
+        console.log('%s[%s]', ' '.repeat(depth), node);
+    }
+}
