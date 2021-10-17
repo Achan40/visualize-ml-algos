@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {buildTree} from '../mlAlgos/decisionTree.js';
+import {buildTree, makePrediction, printTree} from '../mlAlgos/decisionTree.js';
 
 // dataset size
 const SAMPLE_SET_SIZE = 10
@@ -29,8 +29,16 @@ class Visualizer extends Component {
 
     render() {
         console.log(this.state.arr);
-        let tmp = buildTree(this.state.arr, 3, 1)
-        console.log(tmp);
+        let tmp = buildTree(this.state.arr, 3, 2);
+        for (const row of this.state.arr) {
+            let pred = makePrediction(tmp, row);
+            if (row[row.length-1] !== pred) {
+                console.log('Expected=%d, Got=%d Incorrect', row[row.length-1], pred);
+            }
+            else {
+                console.log('Expected=%d, Got=%d', row[row.length-1], pred);
+            }
+        }
         return (
             <div>
                 <button onClick={this.resetArray}>Generate Sample</button>
