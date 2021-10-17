@@ -59,7 +59,7 @@ function testSplit(index, value, dataset) {
 }
 
 // Select the best split point for a dataset
-export function getSplit(dataset) {
+function getSplit(dataset) {
     let cv = dataset.map(function (row) {
         return row[row.length-1];
     })
@@ -89,7 +89,7 @@ export function getSplit(dataset) {
 }
 
 // Create a terminal node, the most common class value for a group of rows
-export function toTerminal(group) {
+function toTerminal(group) {
     let outcomes = group.map(function (row){
         return row[row.length-1];
     })
@@ -138,7 +138,7 @@ export function buildTree(data, max_depth, min_size) {
 }
 
 // Print the tree
-export function printTree(node, depth=0) {
+function printTree(node, depth=0) {
     // check if node is a javascript object, (in python: isinstance(node,dict)), then in order traversal
     if (typeof node === 'object' && node !== null) {
         console.log('%s[X%d < %.3f]', ' '.repeat(depth), node['index']+1, node['value']);

@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {buildTree, printTree} from '../mlAlgos/decisionTree.js';
+import {buildTree} from '../mlAlgos/decisionTree.js';
 
 // dataset size
 const SAMPLE_SET_SIZE = 10
@@ -31,7 +31,6 @@ class Visualizer extends Component {
         console.log(this.state.arr);
         let tmp = buildTree(this.state.arr, 3, 1)
         console.log(tmp);
-        console.log(printTree(tmp));
         return (
             <div>
                 <button onClick={this.resetArray}>Generate Sample</button>
