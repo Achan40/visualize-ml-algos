@@ -30,6 +30,8 @@ class Visualizer extends Component {
     render() {
         console.log(this.state.arr);
         let tmp = buildTree(this.state.arr, 3, 2);
+        console.log(tmp)
+        console.log(printTree(tmp));
         for (const row of this.state.arr) {
             let pred = makePrediction(tmp, row);
             if (row[row.length-1] !== pred) {

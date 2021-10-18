@@ -59,7 +59,7 @@ function testSplit(index, value, dataset) {
 }
 
 // Select the best split point for a dataset
-function getSplit(dataset) {
+export function getSplit(dataset) {
     let cv = dataset.map(function (row) {
         return row[row.length-1];
     })
@@ -70,14 +70,14 @@ function getSplit(dataset) {
     let b_groups = null;
 
     for (let index = 0; index < dataset[0].length-1; index++) {
-        for (const row of dataset) {
-            let groups = testSplit(index, row[index], dataset);
+        for (let row = 0; row < dataset.length; row++) {
+            let groups = testSplit(index, dataset[row][index], dataset);
             let gini = giniIndex(groups, class_values);
             // logging the individual splits
             // console.log('X%d < %.3f Gini=%.3f',index+1,dataset[row][index], gini);
             if (gini < b_score) {
                 b_index = index;
-                b_value = row[index];
+                b_value = dataset[row][index];
                 b_score = gini;
                 b_groups = groups;
             }
@@ -89,7 +89,7 @@ function getSplit(dataset) {
 }
 
 // Create a terminal node, the most common class value for a group of rows
-function toTerminal(group) {
+export function toTerminal(group) {
     let outcomes = group.map(function (row){
         return row[row.length-1];
     })
@@ -102,7 +102,7 @@ function split(node, max_depth, min_size, depth) {
     let right = node['groups'][1];
     delete node['groups'];
     // checking for a no split
-    if (!left || !right) {
+    if (!left || !left.length || !right || !right.length) {
         node['left'] = node['right'] = toTerminal(left.concat(right));
         return;
     }
@@ -141,16 +141,16 @@ export function buildTree(data, max_depth, min_size) {
 export function printTree(node, depth=0) {
     // check if node is a javascript object, (in python: isinstance(node,dict)), then in order traversal
     if (typeof node === 'object' && !Array.isArray(node) && node !== null) {
-        console.log('%s[X%d < %.3f]', ' '.repeat(depth), node['index']+1, node['value']);
-        printTree(node['left'], depth++);
-        printTree(node['right'], depth++);
+        console.log('%s[X%d < %.3f] level:%d', ' '.repeat(depth), (node['index']+1), node['value'], depth);
+        printTree(node['left'], depth+1);
+        printTree(node['right'], depth+1);
     }
     else {
-        console.log('%s[%s]', ' '.repeat(depth), node);
+        console.log('%s[%s] level:%d', ' '.repeat(depth), node, depth);
     }
 }
 
-// make a prediction
+// make a prediction. Pass in the tree, and a row of data to generate a prediction on.
 export function makePrediction(node, row) {
     if (row[node['index']] < node['value']) {
         if (typeof node === 'object' && !Array.isArray(node) && node !== null) {
